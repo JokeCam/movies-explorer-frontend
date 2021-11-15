@@ -12,7 +12,7 @@ import { Routes, Route } from "react-router-dom";
 import { useState } from 'react'
 
 function App() {
-  const [loggedIn, setLoggedIn] = useState(false)
+  const [loggedIn, setLoggedIn] = useState(true)
   //toggle to change header navigation menu
 
   return (
