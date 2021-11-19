@@ -1,0 +1,234 @@
+.navigation {
+    display: flex;
+    align-items: center;
+}
+
+.navigation__logged-out-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-width: 183px;
+    max-height: 32px;
+}
+
+.navigation__logged-out-container_hidden {
+    display: none;
+}
+
+.navigation__register-button {
+    font-style: normal;
+    font-weight: 500;
+    font-size: 12px;
+    line-height: 16px;
+    color: #FFFFFF;
+    margin: 0;
+    cursor: pointer;
+    transition: opacity 0.2s;
+}
+
+.navigation__register-button:hover {
+    opacity: 0.7;
+}
+
+.navigation__signin-button {
+    min-width: 76px;
+    min-height: 32px;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 12px;
+    line-height: 16px;
+    color: #000000;
+    background-color: #3DDC84;
+    border-radius: 3px;
+    outline: none;
+    border: none;
+    margin: 0;
+    padding: 0;
+    cursor: pointer;
+    transition: opacity 0.2s;
+}
+
+.navigation__signin-button:hover {
+    opacity: 0.8;
+}
+
+.navigation__logged-in-container {
+    display: flex;
+    column-gap: 50px;
+}
+
+.navigation__logged-in-container_hidden {
+    display: none;
+}
+
+.navigation__alignment-container {
+    display: flex;
+    column-gap: 20px;
+}
+
+.navigation__nav-button {
+    outline: none;
+    border: none;
+    background-color: transparent;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 14px;
+    line-height: 18px;
+    color: #FFFFFF;
+    cursor: pointer;
+    transition: opacity 0.2s;
+    padding: 0;
+}
+
+.navigation__nav-button:last-of-type {
+    min-width: 163px;
+}
+
+.navigation__nav-button:hover {
+    opacity: 0.7;
+}
+
+.navigation__account-button {
+    background-color: transparent;
+    border: none;
+    outline: none;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 14px;
+    line-height: 16px;
+    color: #FFFFFF;
+    padding: 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    min-width: 100px;
+    cursor: pointer;
+    transition: opacity 0.2s;
+}
+
+.navigation__nav-button_active {
+    font-weight: 550;
+}
+
+.navigation__account-button:hover {
+    opacity: 0.7;
+}
+
+.navigation__account-icon {
+    min-width: 26px;
+    min-height: 30px;
+    background-color: #313131;
+    border-radius: 4px;
+    background-image: url('../../images/account-icon.svg');
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+.navigation__account-window-button {
+    display: none;
+    background-image: url('../../images/burger-icon.svg');
+    min-width: 44px;
+    min-height: 44px;
+    outline: none;
+    background-color: transparent;
+    border: none;
+    padding: 0;
+}
+
+.navigation__account-window-button_active {
+    background-image: url('../../images/close-popup.svg');
+    background-position: center;
+    background-repeat: no-repeat;
+    z-index: 2;
+    top: 22px;
+    right: 22px;
+    position: fixed;
+}
+
+.navigation__account-window {
+    display: none;
+}
+
+.navigation__account-window_displayed {
+    position: fixed;
+    display: flex;
+    justify-content: flex-end;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color:rgba(0, 0, 0, 0.5);
+}
+
+.navigation__account-window-container {
+    min-width: 520px;
+    min-height: 100%;
+    background-color: #202020;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+@media (max-width: 768px) {
+    .navigation__alignment-container {
+        flex-direction: column;
+        align-items: center;
+        margin-top: 159px;
+        row-gap: 28px;
+    }
+
+    .navigation__nav-button_active {
+        border-bottom: 1px solid #FFFFFF;
+    }
+
+    .navigation__account-window-button {
+        display: inline-block;
+    }
+
+    .navigation__logged-out-container {
+        display: none;
+    }
+
+    .navigation__logged-in-container {
+        display: none;
+    }
+
+    .navigation__account-button {
+        position: fixed;
+        bottom: 92px;
+    }
+}
+
+@media (max-width: 578px) {
+    .navigation__logged-out-container {
+        min-width: 132px;
+        column-gap: 14px;
+    }
+
+    .navigation__register-button {
+        font-size: 10px;
+        line-height: 16px;
+    }
+
+    .navigation__signin-button {
+        font-size: 10px;
+        line-height: 16px;
+    }
+
+    .navigation__account-window-button {
+        min-width: 40px;
+        min-height: 43px;
+    }
+}
+
+@media (max-width: 522px) {
+    .navigation__account-window-container {
+        min-width: 100%;
+    }
+
+    .navigation__nav-button {
+        font-size: 18px;
+        line-height: 22px;
+    }
+}
