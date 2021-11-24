@@ -6,7 +6,7 @@ function NotFound() {
     let navigate = useNavigate();
 
     function handleGoBack() {
-        navigate(-1)
+        navigate(-2)
     }
 
     return (

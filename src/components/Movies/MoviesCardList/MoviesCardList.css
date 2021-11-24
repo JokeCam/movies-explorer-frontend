@@ -1,9 +1,13 @@
 .movies-card-list {
     margin-top: 80px;
-    display: grid;
+    display: none;
     grid-template-columns: repeat(3, 360px);
     column-gap: 30px;
     row-gap: 60px;
+}
+
+.movie-card-list_displayed {
+    display: grid;
 }
 
 @media (max-width: 1400px) {
