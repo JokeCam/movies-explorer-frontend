@@ -135,7 +135,6 @@ function App() {
 
   async function getAllMovies() {
     let fetchedMovies = await fetchAllMovies()
-    console.log(fetchedMovies)
     addFetchedMoviesToLocalStorage(fetchedMovies)
     return fetchedMovies
   }
