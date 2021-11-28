@@ -47,6 +47,17 @@
     opacity: 0.8;
 }
 
+.search-form__error-msg {
+    margin: 20px 0 0;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 11px;
+    line-height: 13px;
+    color: #FF004C;
+    text-align: center;
+    min-height: 13px;
+}
+
 @media (max-width: 425px) {
     .search-form__input {
         margin: 20px 0 20px 12px;

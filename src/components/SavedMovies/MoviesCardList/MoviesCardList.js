@@ -1,7 +1,6 @@
 import React from 'react'
 import './MoviesCardList.css'
 import MoviesCard from '../MoviesCard/MoviesCard'
-import pulpFictionMovie from '../../../images/pulp-fiction.jpg'
 
 function MoviesCardList(props) {
     function convertLength(item) {

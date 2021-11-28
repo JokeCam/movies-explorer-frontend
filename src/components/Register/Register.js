@@ -17,11 +17,14 @@ function Register(props) {
 
     function handleRegister(evt) {
         evt.preventDefault()
+        registerForm.setIsValid(false)
         props.apiRegister(registerForm.values.nameInput, registerForm.values.emailInput, registerForm.values.passwordInput)
         .then((res) => {
+            registerForm.setIsValid(true)
             registerForm.resetForm()
         })
         .catch((err) => {
+            registerForm.setIsValid(true)
             setApiError(err)
         })
     }
@@ -45,7 +48,7 @@ function Register(props) {
                 </div>
                 <div className="register__input-container">
                     <p className="register__subtitle">Пароль</p>
-                    <input className="register__input" name="passwordInput" type="password" required onChange={registerForm.handleChange}/>
+                    <input className="register__input" name="passwordInput" type="password" required onChange={registerForm.handleChange} minLength="2"/>
                     <p className="register__error-msg">{registerForm.errors.passwordInput}</p>
                 </div>
                 <p className="register__error-msg">{apiError}</p>

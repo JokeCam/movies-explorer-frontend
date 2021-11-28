@@ -7,25 +7,35 @@ import { useFormWithValidation } from '../../custom-hooks/FormValidationHook'
 function Profile(props) {
     const [displayedName, setDisplayedName] = useState()
     const [displaySaveButton, setDisplaySaveButton] = useState(false)
-    const [errorMsg, setErrorMsg] = useState("")
+    const [errorMsg, setErrorMsg] = useState('')
+    const [successMsg, setSuccessMsg] = useState('')
     const profileForm = useFormWithValidation()
     const userContext = useContext(CurrentUserContext)
 
     useEffect(() => {
-        profileForm.values.nameInput = userContext.name
-        profileForm.values.emailInput = userContext.email
         setDisplayedName(userContext.name)
-    }, [profileForm.values, userContext.email, userContext.name])
+    }, [userContext.name])
 
     function handleDisplaySaveButton() {
         setDisplaySaveButton(true)
     }
 
+    function handleHideSaveButton() {
+        setDisplaySaveButton(false)
+    }
+
     function handleUpdateProfile(evt) {
         evt.preventDefault()
+        if(!profileForm.values.nameInput) {
+            profileForm.values.nameInput = userContext.name
+        }
+        if(!profileForm.values.emailInput) {
+            profileForm.values.emailInput = userContext.email
+        }
         props.apiUpdateUserData(profileForm.values.nameInput, profileForm.values.emailInput)
         .then((res) => {
-            console.log(res)
+            setSuccessMsg('Данные сохранены!')
+            handleHideSaveButton()
         })
         .catch((err) => {
             setErrorMsg(err)
@@ -38,13 +48,14 @@ function Profile(props) {
             <form className="profile__form" onSubmit={evt => handleUpdateProfile(evt)}>
                 <div className="profile__input-container">
                     <p className="profile__subtitle">Имя</p>
-                    <input className="profile__input" value={profileForm.values.nameInput || ' ' || userContext.name} name="nameInput" disabled={!displaySaveButton} onChange={profileForm.handleChange}/>
+                    <input className="profile__input" defaultValue={userContext.name} name="nameInput" disabled={!displaySaveButton} onChange={profileForm.handleChange}/>
                 </div>
                 <div className="profile__alignment"></div>
                 <div className="profile__input-container">
                     <p className="profile__subtitle">E-mail</p>
-                    <input className="profile__input" value={profileForm.values.emailInput || ' ' || userContext.email} type="email" name="emailInput" disabled={!displaySaveButton} onChange={profileForm.handleChange}/>
+                    <input className="profile__input" defaultValue={userContext.email} type="email" name="emailInput" disabled={!displaySaveButton} onChange={profileForm.handleChange}/>
                 </div>
+                <p className="profile__success-msg">{successMsg}</p>
                 <div className={`profile__submit-container ${displaySaveButton ? "profile__submit-container_displayed" : ""}`}>
                     <p className="profile__error-msg">{errorMsg}</p>
                     <button disabled={!profileForm.isValid} className={`profile__submit-button ${profileForm.isValid ? "" : "profile__submit-button_disabled"}`} type="submit">Сохранить</button>

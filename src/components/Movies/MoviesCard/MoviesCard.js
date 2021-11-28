@@ -7,6 +7,8 @@ function MoviesCard(props) {
     const [displayAddButton, setDisplayAddButton] = useState(false)
     const [displayCheckMark, setDisplayCheckMark] = useState(false)
 
+    const [errorMsg, setErrorMsg] = useState('')
+
     const [apiMovieId, setApiMovieId] = useState('')
 
     useEffect(() => {
@@ -21,10 +23,13 @@ function MoviesCard(props) {
 
     async function handleSaveMovie() {
         if(!displayCheckMark){
-            console.log(props.movieData)
             props.apiAddMovie(props.movieData)
             .then(res => setApiMovieId(res._id))
-            .catch(err => console.log(err))
+            .catch((err) => {
+                setErrorMsg(err)
+                setDisplayCheckMark(false)
+                setDisplayAddButton(true)
+            })
             setDisplayCheckMark(true)
             setDisplayAddButton(false)
         } else {
@@ -54,13 +59,15 @@ function MoviesCard(props) {
                 onMouseOver={handleDisplayAddButton}>
                 Сохранить
             </button>
+            <a href={props.movieData.trailerLink} target="_blank" rel="noreferrer" >
             <img className="movies-card__image" src={`https://api.nomoreparties.co${props.movieData.image.url}`} alt="Фото превью фильма"
-                onClick={handleSaveMovie}
                 onMouseOver={handleDisplayAddButton}
                 onMouseLeave={handleHideAddbutton}
             />
+            </a>
             <div className="movies-card__text-container">
                 <h5 className="movies-card__title">{props.movieData.nameRU}</h5>
+                <p className="movies-card__error-msg">{errorMsg}</p>
                 <div className="movies-card__subtitle-container">
                     <p className="movies-card__subtitle">{props.length}</p>
                 </div>

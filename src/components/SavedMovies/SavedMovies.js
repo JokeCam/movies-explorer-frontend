@@ -2,27 +2,35 @@ import React from 'react'
 import './SavedMovies.css'
 import SearchForm from '../Movies/SearchForm/SearchForm'
 import FilterCheckBox from '../Movies/FilterCheckbox/FilterCheckBox'
-import PreLoader from '../Movies/Preloader/Preloader'
 import MoviesCardList from './MoviesCardList/MoviesCardList'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useContext } from 'react'
+import { CurrentUserContext } from '../../contexts/CurrentUserContext'
 
 function SavedMovies(props) {
     const [filterCheckBoxButtonActive, setFilterCheckBoxButtonActive] = useState(false)
     const [displayedUserSavedMovies, setDisplayedUserSavedMovies] = useState([])
+    const [displayNotFoundMsg, setDisplayNotFoundMsg] = useState(false)
     const [userSavedMovies, setUserSavedMovies] = useState([])
+    const userContext = useContext(CurrentUserContext)
 
     useEffect(() => {
+        let currentUserSavedMovies = []
+        props.userSavedMovies.forEach((item) => {
+            if(item.owner === userContext._id) {
+                currentUserSavedMovies.push(item)
+            }
+        })
         setUserSavedMovies(props.userSavedMovies)
-        setDisplayedUserSavedMovies(props.userSavedMovies)
-    }, [props.userSavedMovies])
+        setDisplayedUserSavedMovies(currentUserSavedMovies)
+    }, [props.userSavedMovies, userContext._id])
+
 
     function searchMovies(evt) {
-        evt.preventDefault()
         let filteredMovieList = []
-        let name = evt.target[0].value
+        let regex = new RegExp(evt.target[0].value, "ig")
         userSavedMovies.forEach((item) => {
-            if(item.nameRU.includes(name)) {
-                if(!filterCheckBoxButtonActive) {
+            if (item.nameRU.search(regex) > -1) {
+                if (!filterCheckBoxButtonActive) {
                     filteredMovieList.push(item)
                 } else if (filterCheckBoxButtonActive && item.duration <= 40) {
                     filteredMovieList.push(item)
@@ -30,6 +38,11 @@ function SavedMovies(props) {
             }
         })
         setDisplayedUserSavedMovies(filteredMovieList)
+        if (!filteredMovieList.length > 0) {
+            setDisplayNotFoundMsg(true)
+        } else {
+            setDisplayNotFoundMsg(false)
+        }
     }
 
     return (
@@ -46,6 +59,7 @@ function SavedMovies(props) {
                 displayedUserSavedMovies={displayedUserSavedMovies}
                 apiDeleteMovie={props.apiDeleteMovie}
             />
+            <h4 className={`saved-movies__not-found-msg ${displayNotFoundMsg ? "saved-movies__not-found-msg_displayed" : ""}`}>Ничего не найдено</h4>
         </div>
     )
 }

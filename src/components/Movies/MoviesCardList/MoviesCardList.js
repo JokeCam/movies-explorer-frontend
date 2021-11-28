@@ -1,7 +1,6 @@
 import React from 'react'
 import './MoviesCardList.css'
 import MoviesCard from '../MoviesCard/MoviesCard'
-import pulpFictionMovie from '../../../images/pulp-fiction.jpg'
 
 function MoviesCardList(props) {
     function convertLength(item) {
@@ -12,13 +11,13 @@ function MoviesCardList(props) {
 
     return (
         <div className={`movies-card-list ${props.displayMovieCardList ? "movie-card-list_displayed" : ""}`}>
-            {/* <MoviesCard link={pulpFictionMovie} name="Pulp Fiction" length="2h 34m"/> */}
             {
                 props.displayedMovieList.map((item, index) => {
                     return <MoviesCard
                         userSavedMovies={props.userSavedMovies}
                         apiDeleteMovie={props.apiDeleteMovie}
                         apiAddMovie={props.apiAddMovie}
+                        handleTravel={props.handleTravel}
                         length={convertLength(item)}
                         movieData={item}
                         key={index}

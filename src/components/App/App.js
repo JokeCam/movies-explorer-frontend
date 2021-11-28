@@ -46,6 +46,7 @@ function App() {
     return login(email, password)
       .then((res) => {
         setLoggedIn(true)
+        setUserData()
         apiGetMovies()
         handleTravel('/movies')
         return res
@@ -75,8 +76,15 @@ function App() {
         setUserSavedMovies(previouslySavedMovies)
         return res
       })
+  }
+
+  function setUserData() {
+    getUserData()
+      .then((res) => {
+        setCurrentUser(res)
+      })
       .catch((err) => {
-        return err
+        console.log(err)
       })
   }
 
@@ -94,10 +102,10 @@ function App() {
 
   function apiUpdateUserData(name, email) {
     return updateUserData(name, email)
-    .then((res) => {
-      setCurrentUser(res)
-      return res
-    })
+      .then((res) => {
+        setCurrentUser(res)
+        return res
+      })
   }
 
   function apiGetMovies() {
@@ -164,7 +172,7 @@ function App() {
             </>
           } />
           <Route path="/movies" element={
-            <ProtectedRoute loggedIn={loggedIn}>
+            <ProtectedRoute loggedIn={loggedIn} path="/signin">
               <Header loggedIn={loggedIn} />
               <Movies
                 getAllMovies={getAllMovies}
@@ -174,12 +182,13 @@ function App() {
                 apiAddMovie={apiAddMovie}
                 apiDeleteMovie={apiDeleteMovie}
                 userSavedMovies={userSavedMovies}
+                handleTravel={handleTravel}
               />
               <Footer />
             </ProtectedRoute>
           } />
           <Route path="/saved-movies" element={
-            <ProtectedRoute loggedIn={loggedIn}>
+            <ProtectedRoute loggedIn={loggedIn} path="/signin">
               <Header loggedIn={loggedIn} />
               <SavedMovies
                 userSavedMovies={userSavedMovies}
@@ -189,7 +198,7 @@ function App() {
             </ProtectedRoute>
           } />
           <Route path="/profile" element={
-            <ProtectedRoute loggedIn={loggedIn}>
+            <ProtectedRoute loggedIn={loggedIn} path="/signin">
               <Header
                 loggedIn={loggedIn}
               />
@@ -200,18 +209,18 @@ function App() {
             </ProtectedRoute>
           } />
           <Route path="/signin" element={
-            <>
+            <ProtectedRoute loggedIn={!loggedIn} path="/movies">
               <Login
                 apiLogin={apiLogin}
               />
-            </>
+            </ProtectedRoute>
           } />
           <Route path="/signup" element={
-            <>
+            <ProtectedRoute loggedIn={!loggedIn} path="/movies">
               <Register
                 apiRegister={apiRegister}
               />
-            </>
+            </ProtectedRoute>
           } />
           <Route path="*" element={
             <>

@@ -17,11 +17,16 @@ function Login(props) {
 
     function handleLogin(evt) {
         evt.preventDefault()
+        loginForm.setIsValid(false)
         props.apiLogin(loginForm.values.emailInput, loginForm.values.passwordInput)
         .then((res) => {
             if(res.ok) {
                 loginForm.resetForm()
-            } else setApiErrorMsg(res)
+                loginForm.setIsValid(true)
+            } else {
+                loginForm.setIsValid(false)
+                setApiErrorMsg(res)
+            }
         })
     }
 
@@ -39,7 +44,7 @@ function Login(props) {
                 </div>
                 <div className="login__input-container">
                     <p className="login__subtitle">Пароль</p>
-                    <input className="login__input" type="password" name="passwordInput" required onChange={loginForm.handleChange} />
+                    <input className="login__input" type="password" name="passwordInput" required onChange={loginForm.handleChange} minLength="2"/>
                     <p className="login__error-msg" >{loginForm.errors.passwordInput}</p>
                 </div>
                 <p className="login__error-msg">{apiErrorMsg}</p>

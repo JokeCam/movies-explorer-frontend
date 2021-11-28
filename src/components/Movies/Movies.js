@@ -38,7 +38,6 @@ function Movies(props) {
     // (based on the amount of rows currently displayed and final amount of filtered movies)
 
     function searchMovies(evt) {
-        evt.preventDefault()
         setDisplayMovieCardList(false)
         setDisplayNotFoundMsg(false)
         setDisplayMoreButton(false)
@@ -49,7 +48,6 @@ function Movies(props) {
     // hide jsx elements, then search for fetched movie cards in local storage and fetch them if necessary or take already fetched movie cards
 
     async function fetchAllMovies(evt) {
-        console.log('fetch API')
         setDisplayPreloader(true)
         let fetchedMovies = await props.getAllMovies()
         filterMovies(fetchedMovies, evt)
@@ -59,8 +57,9 @@ function Movies(props) {
 
     function filterMovies(fetchedMovies, evt) {
         let filteredMovies = []
+        let regex = new RegExp(evt.target[0].value,"ig")
         fetchedMovies.forEach((item) => {
-            if (item.nameRU.includes(evt.target[0].value)) {
+            if (item.nameRU.search(regex) > -1) {
                 if(!filterCheckBoxButtonActive){
                     filteredMovies.push(item)
                 } else if (filterCheckBoxButtonActive && item.duration <= 40){
@@ -137,21 +136,22 @@ function Movies(props) {
             <SearchForm
                 searchMovies={searchMovies}
             />
-            <FilterCheckBox
-                filterCheckBoxButtonActive={filterCheckBoxButtonActive}
+            <FilterCheckBox 
                 setFilterCheckBoxButtonActive={setFilterCheckBoxButtonActive}
+                filterCheckBoxButtonActive={filterCheckBoxButtonActive}
             />
             <PreLoader
                 displayPreloader={displayPreloader}
             />
             <MoviesCardList
-                displayedMovieList={displayedMovieList}
                 displayMovieCardList={displayMovieCardList}
+                displayedMovieList={displayedMovieList}
                 userSavedMovies={props.userSavedMovies}
-                apiAddMovie={props.apiAddMovie}
                 apiDeleteMovie={props.apiDeleteMovie}
+                handleTravel={props.handleTravel}
+                apiAddMovie={props.apiAddMovie}
             />
-            <h4 className={`movies__not-found-msg ${displayNotFoundMsg ? "movies__not-found-msg_displayed" : ""}`}>Ничего не найдено</h4>
+            <p className={`movies__not-found-msg ${displayNotFoundMsg ? "movies__not-found-msg_displayed" : ""}`}>Ничего не найдено</p>
             <button className={`movies__button ${displayMoreButton ? "movies__button_displayed" : ""}`} onClick={addMoreMoviesToDisplay}>Ещё</button>
         </div>
     )
