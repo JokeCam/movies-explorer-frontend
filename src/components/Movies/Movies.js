@@ -37,13 +37,13 @@ function Movies(props) {
     // wait for dependencies to change and check if "more button" should be displayed and display if necessary
     // (based on the amount of rows currently displayed and final amount of filtered movies)
 
-    function searchMovies(evt) {
+    async function searchMovies(evt) {
         setDisplayMovieCardList(false)
         setDisplayNotFoundMsg(false)
         setDisplayMoreButton(false)
         if (props.checkLocalStorageForMovies()) {
             filterMovies(props.checkLocalStorageForMovies(), evt)
-        } else fetchAllMovies(evt)
+        } else await fetchAllMovies(evt)
     }
     // hide jsx elements, then search for fetched movie cards in local storage and fetch them if necessary or take already fetched movie cards
 
@@ -57,12 +57,12 @@ function Movies(props) {
 
     function filterMovies(fetchedMovies, evt) {
         let filteredMovies = []
-        let regex = new RegExp(evt.target[0].value,"ig")
+        let regex = new RegExp(evt.target[0].value, "ig")
         fetchedMovies.forEach((item) => {
             if (item.nameRU.search(regex) > -1) {
-                if(!filterCheckBoxButtonActive){
+                if (!filterCheckBoxButtonActive) {
                     filteredMovies.push(item)
-                } else if (filterCheckBoxButtonActive && item.duration <= 40){
+                } else if (filterCheckBoxButtonActive && item.duration <= 40) {
                     filteredMovies.push(item)
                 }
             }
@@ -134,9 +134,13 @@ function Movies(props) {
     return (
         <div className="movies">
             <SearchForm
+                checkLocalStorageForSearchFormInputValue={props.checkLocalStorageForSearchFormInputValue}
+                addSearchFormInputValueToLocalStorage={props.addSearchFormInputValueToLocalStorage}
                 searchMovies={searchMovies}
             />
-            <FilterCheckBox 
+            <FilterCheckBox
+                checkLocalStorageForFilterCheckBoxValue={props.checkLocalStorageForFilterCheckBoxValue}
+                addFilterCheckBoxValueToLocalStorage={props.addFilterCheckBoxValueToLocalStorage}
                 setFilterCheckBoxButtonActive={setFilterCheckBoxButtonActive}
                 filterCheckBoxButtonActive={filterCheckBoxButtonActive}
             />

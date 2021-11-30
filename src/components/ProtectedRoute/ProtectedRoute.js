@@ -2,9 +2,9 @@ import { Navigate } from "react-router-dom";
 
 const ProtectedRoute = ({ children, ...rest }) => {
     if (!rest.loggedIn) {
-        return <Navigate to={rest.path}/>;
+        return <Navigate to="/signin"/>
     }
-    return children;
+    return children 
 };
 
 export default ProtectedRoute;

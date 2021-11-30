@@ -2,10 +2,14 @@ import React from 'react'
 import './MoviesCard.css'
 import { useState, useEffect } from 'react'
 import checkMark from '../../../images/checkmark.svg'
+import { useContext } from 'react'
+import { CurrentUserContext } from '../../../contexts/CurrentUserContext';
 
 function MoviesCard(props) {
     const [displayAddButton, setDisplayAddButton] = useState(false)
     const [displayCheckMark, setDisplayCheckMark] = useState(false)
+
+    const userContext = useContext(CurrentUserContext)
 
     const [errorMsg, setErrorMsg] = useState('')
 
@@ -13,23 +17,25 @@ function MoviesCard(props) {
 
     useEffect(() => {
         props.userSavedMovies.forEach((item) => {
-            if (item.movieId === props.movieData.id) {
-                setDisplayCheckMark(true)
-                setDisplayAddButton(false)
-                setApiMovieId(item._id)
+            if (props.movieData.id === item.movieId) {
+                if (userContext._id === item.owner) {
+                    setDisplayCheckMark(true)
+                    setDisplayAddButton(false)
+                    setApiMovieId(item._id)
+                }
             }
         })
-    }, [props.movieData, props.userSavedMovies])
+    }, [props.movieData.id, props.userSavedMovies, userContext._id])
 
     async function handleSaveMovie() {
-        if(!displayCheckMark){
+        if (!displayCheckMark) {
             props.apiAddMovie(props.movieData)
-            .then(res => setApiMovieId(res._id))
-            .catch((err) => {
-                setErrorMsg(err)
-                setDisplayCheckMark(false)
-                setDisplayAddButton(true)
-            })
+                .then(res => setApiMovieId(res._id))
+                .catch((err) => {
+                    setErrorMsg(err)
+                    setDisplayCheckMark(false)
+                    setDisplayAddButton(true)
+                })
             setDisplayCheckMark(true)
             setDisplayAddButton(false)
         } else {
@@ -60,10 +66,10 @@ function MoviesCard(props) {
                 Сохранить
             </button>
             <a href={props.movieData.trailerLink} target="_blank" rel="noreferrer" >
-            <img className="movies-card__image" src={`https://api.nomoreparties.co${props.movieData.image.url}`} alt="Фото превью фильма"
-                onMouseOver={handleDisplayAddButton}
-                onMouseLeave={handleHideAddbutton}
-            />
+                <img className="movies-card__image" src={`https://api.nomoreparties.co${props.movieData.image.url}`} alt="Фото превью фильма"
+                    onMouseOver={handleDisplayAddButton}
+                    onMouseLeave={handleHideAddbutton}
+                />
             </a>
             <div className="movies-card__text-container">
                 <h5 className="movies-card__title">{props.movieData.nameRU}</h5>

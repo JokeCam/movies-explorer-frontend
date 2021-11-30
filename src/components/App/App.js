@@ -9,6 +9,7 @@ import Register from '../Register/Register'
 import Login from '../Login/Login'
 import NotFound from '../NotFound/NotFound'
 import ProtectedRoute from '../ProtectedRoute/ProtectedRoute';
+import AuthorizedProtectedRoute from '../AuthorizedProtectedRoute/AuthorizedProtectedRoute';
 import { Routes, Route, useNavigate, useLocation } from "react-router-dom";
 import { useState, useEffect } from 'react'
 import { fetchAllMovies } from '../../utils/MoviesApi'
@@ -17,7 +18,7 @@ import { CurrentUserContext } from '../../contexts/CurrentUserContext.js';
 
 function App() {
   let navigate = useNavigate()
-  let location = useLocation();
+  let location = useLocation()
 
   const [loggedIn, setLoggedIn] = useState(false)
 
@@ -38,7 +39,9 @@ function App() {
   function apiRegister(name, email, password) {
     return register(name, email, password)
       .then((res) => {
-        handleTravel('/signin')
+        setLoggedIn(true)
+        setCurrentUser(res)
+        handleTravel('/movies')
       })
   }
 
@@ -59,9 +62,9 @@ function App() {
   function apiLogout() {
     logout()
       .then((res) => {
+        handleTravel('/')
         setLoggedIn(false)
         localStorage.clear()
-        handleTravel('/signin')
       })
       .catch((err) => {
         console.log(err)
@@ -147,6 +150,26 @@ function App() {
     localStorage.setItem('searchedMovies', JSON.stringify(searchedMovies))
   }
 
+  function addSearchFormInputValueToLocalStorage(inputValue) {
+    localStorage.setItem('searchFormInputValue', JSON.stringify(inputValue))
+  }
+
+  function addFilterCheckBoxValueToLocalStorage(checkBoxValue) {
+    localStorage.setItem('filterCheckBoxValue', JSON.stringify(checkBoxValue))
+  }
+
+  function checkLocalStorageForFilterCheckBoxValue() {
+    if (JSON.parse(localStorage.getItem('filterCheckBoxValue'))) {
+      return JSON.parse(localStorage.getItem('filterCheckBoxValue'))
+    } else return false
+  }
+
+  function checkLocalStorageForSearchFormInputValue() {
+    if (JSON.parse(localStorage.getItem('searchFormInputValue'))) {
+      return JSON.parse(localStorage.getItem('searchFormInputValue'))
+    } else return false
+  }
+
   function checkLocalStorageForMovies() {
     if (JSON.parse(localStorage.getItem('movies'))) {
       return JSON.parse(localStorage.getItem('movies'))
@@ -171,25 +194,33 @@ function App() {
             </>
           } />
           <Route path="/movies" element={
-            <ProtectedRoute loggedIn={loggedIn} path="/signin">
+            <ProtectedRoute loggedIn={loggedIn}>
               <Header loggedIn={loggedIn} />
               <Movies
-                getAllMovies={getAllMovies}
+                checkLocalStorageForSearchFormInputValue={checkLocalStorageForSearchFormInputValue}
+                checkLocalStorageForFilterCheckBoxValue={checkLocalStorageForFilterCheckBoxValue}
+                addSearchFormInputValueToLocalStorage={addSearchFormInputValueToLocalStorage}
+                addFilterCheckBoxValueToLocalStorage={addFilterCheckBoxValueToLocalStorage}
+                checkLocalStorageForSearchedMovies={checkLocalStorageForSearchedMovies}
                 addSearchedMoviesToLocalStorage={addSearchedMoviesToLocalStorage}
                 checkLocalStorageForMovies={checkLocalStorageForMovies}
-                checkLocalStorageForSearchedMovies={checkLocalStorageForSearchedMovies}
-                apiAddMovie={apiAddMovie}
-                apiDeleteMovie={apiDeleteMovie}
                 userSavedMovies={userSavedMovies}
+                apiDeleteMovie={apiDeleteMovie}
+                getAllMovies={getAllMovies}
                 handleTravel={handleTravel}
+                apiAddMovie={apiAddMovie}
               />
               <Footer />
             </ProtectedRoute>
           } />
           <Route path="/saved-movies" element={
-            <ProtectedRoute loggedIn={loggedIn} path="/signin">
+            <ProtectedRoute loggedIn={loggedIn}>
               <Header loggedIn={loggedIn} />
               <SavedMovies
+                checkLocalStorageForSearchFormInputValue={checkLocalStorageForSearchFormInputValue}
+                checkLocalStorageForFilterCheckBoxValue={checkLocalStorageForFilterCheckBoxValue}
+                addSearchFormInputValueToLocalStorage={addSearchFormInputValueToLocalStorage}
+                addFilterCheckBoxValueToLocalStorage={addFilterCheckBoxValueToLocalStorage}
                 userSavedMovies={userSavedMovies}
                 apiDeleteMovie={apiDeleteMovie}
               />
@@ -197,7 +228,7 @@ function App() {
             </ProtectedRoute>
           } />
           <Route path="/profile" element={
-            <ProtectedRoute loggedIn={loggedIn} path="/signin">
+            <ProtectedRoute loggedIn={loggedIn}>
               <Header
                 loggedIn={loggedIn}
               />
@@ -208,18 +239,18 @@ function App() {
             </ProtectedRoute>
           } />
           <Route path="/signin" element={
-            <ProtectedRoute loggedIn={!loggedIn} path="/movies">
+            <AuthorizedProtectedRoute loggedIn={loggedIn}>
               <Login
                 apiLogin={apiLogin}
               />
-            </ProtectedRoute>
+            </AuthorizedProtectedRoute>
           } />
           <Route path="/signup" element={
-            <ProtectedRoute loggedIn={!loggedIn} path="/movies">
+            <AuthorizedProtectedRoute loggedIn={loggedIn}>
               <Register
                 apiRegister={apiRegister}
               />
-            </ProtectedRoute>
+            </AuthorizedProtectedRoute>
           } />
           <Route path="*" element={
             <>

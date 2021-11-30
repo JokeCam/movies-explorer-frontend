@@ -9,6 +9,7 @@ function Register(props) {
     let navigate = useNavigate();
 
     const registerForm = useFormWithValidation()
+    const [disableInput , setDisableInput] = useState(false)
     const [apiError, setApiError] = useState('')
 
     function handleTravel(route) {
@@ -18,13 +19,16 @@ function Register(props) {
     function handleRegister(evt) {
         evt.preventDefault()
         registerForm.setIsValid(false)
+        setDisableInput(true)
         props.apiRegister(registerForm.values.nameInput, registerForm.values.emailInput, registerForm.values.passwordInput)
         .then((res) => {
             registerForm.setIsValid(true)
+            setDisableInput(false)
             registerForm.resetForm()
         })
         .catch((err) => {
             registerForm.setIsValid(true)
+            setDisableInput(false)
             setApiError(err)
         })
     }
@@ -38,17 +42,17 @@ function Register(props) {
             <form className="register__form" onSubmit={evt => handleRegister(evt)}>
                 <div className="register__input-container">
                     <p className="register__subtitle">Имя</p>
-                    <input className="register__input" name="nameInput" minLength={2} maxLength={30} required onChange={registerForm.handleChange}/>
+                    <input className="register__input" disabled={disableInput} name="nameInput" minLength={2} maxLength={30} required onChange={registerForm.handleChange}/>
                     <p className="register__error-msg">{registerForm.errors.nameInput}</p>
                 </div>
                 <div className="register__input-container">
                     <p className="register__subtitle">E-mail</p>
-                    <input className="register__input" name="emailInput" type="email" required onChange={registerForm.handleChange}/>
+                    <input className="register__input" disabled={disableInput} name="emailInput" type="email" required onChange={registerForm.handleChange}/>
                     <p className="register__error-msg">{registerForm.errors.emailInput}</p>
                 </div>
                 <div className="register__input-container">
                     <p className="register__subtitle">Пароль</p>
-                    <input className="register__input" name="passwordInput" type="password" required onChange={registerForm.handleChange} minLength="2"/>
+                    <input className="register__input" disabled={disableInput} name="passwordInput" type="password" required onChange={registerForm.handleChange} minLength="2"/>
                     <p className="register__error-msg">{registerForm.errors.passwordInput}</p>
                 </div>
                 <p className="register__error-msg">{apiError}</p>

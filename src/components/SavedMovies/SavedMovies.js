@@ -16,7 +16,7 @@ function SavedMovies(props) {
     useEffect(() => {
         let currentUserSavedMovies = []
         props.userSavedMovies.forEach((item) => {
-            if(item.owner === userContext._id) {
+            if (item.owner === userContext._id) {
                 currentUserSavedMovies.push(item)
             }
         })
@@ -48,11 +48,15 @@ function SavedMovies(props) {
     return (
         <div className="saved-movies">
             <SearchForm
+                checkLocalStorageForSearchFormInputValue={props.checkLocalStorageForSearchFormInputValue}
+                addSearchFormInputValueToLocalStorage={props.addSearchFormInputValueToLocalStorage}
                 searchMovies={evt => searchMovies(evt)}
             />
             <FilterCheckBox
-                filterCheckBoxButtonActive={filterCheckBoxButtonActive}
+                checkLocalStorageForFilterCheckBoxValue={props.checkLocalStorageForFilterCheckBoxValue}
+                addFilterCheckBoxValueToLocalStorage={props.addFilterCheckBoxValueToLocalStorage}
                 setFilterCheckBoxButtonActive={setFilterCheckBoxButtonActive}
+                filterCheckBoxButtonActive={filterCheckBoxButtonActive}
             />
             {/* <PreLoader /> */}
             <MoviesCardList

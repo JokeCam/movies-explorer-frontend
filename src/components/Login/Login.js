@@ -9,6 +9,7 @@ function Login(props) {
     let navigate = useNavigate();
 
     const [apiErrorMsg, setApiErrorMsg] = useState('')
+    const [disableInput , setDisableInput] = useState(false)
     const loginForm = useFormWithValidation()
 
     function handleTravel(route) {
@@ -18,13 +19,16 @@ function Login(props) {
     function handleLogin(evt) {
         evt.preventDefault()
         loginForm.setIsValid(false)
+        setDisableInput(true)
         props.apiLogin(loginForm.values.emailInput, loginForm.values.passwordInput)
         .then((res) => {
             if(res.ok) {
                 loginForm.resetForm()
                 loginForm.setIsValid(true)
+                setDisableInput(false)
             } else {
                 loginForm.setIsValid(false)
+                setDisableInput(false)
                 setApiErrorMsg(res)
             }
         })
@@ -39,12 +43,12 @@ function Login(props) {
             <form className="login__form" onSubmit={evt => handleLogin(evt)}>
                 <div className="login__input-container">
                     <p className="login__subtitle">E-mail</p>
-                    <input className="login__input" type="email" name="emailInput" required onChange={loginForm.handleChange} />
+                    <input className="login__input" disabled={disableInput} type="email" name="emailInput" required onChange={loginForm.handleChange} />
                     <p className="login__error-msg">{loginForm.errors.emailInput}</p>
                 </div>
                 <div className="login__input-container">
                     <p className="login__subtitle">Пароль</p>
-                    <input className="login__input" type="password" name="passwordInput" required onChange={loginForm.handleChange} minLength="2"/>
+                    <input className="login__input" disabled={disableInput} type="password" name="passwordInput" required onChange={loginForm.handleChange} minLength="2"/>
                     <p className="login__error-msg" >{loginForm.errors.passwordInput}</p>
                 </div>
                 <p className="login__error-msg">{apiErrorMsg}</p>

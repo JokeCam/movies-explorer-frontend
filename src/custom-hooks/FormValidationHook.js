@@ -9,6 +9,7 @@ export function useFormWithValidation() {
     const target = event.target;
     const name = target.name;
     const value = target.value;
+
     if (name === 'emailInput') {
       let pattern = new RegExp(/^(("[\w-\s]+")|([\w-]+(?:\.[\w-]+)*)|("[\w-\s]+")([\w-]+(?:\.[\w-]+)*))(@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$)|(@\[?((25[0-5]\.|2[0-4][0-9]\.|1[0-9]{2}\.|[0-9]{1,2}\.))((25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\.){2}(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\]?$)/i);
       if (!pattern.test(value)) {
@@ -24,6 +25,11 @@ export function useFormWithValidation() {
       setValues({ ...values, [name]: value });
       setErrors({ ...errors, [name]: target.validationMessage });
       setIsValid(target.closest("form").checkValidity());
+    }
+
+    if (target.defaultValue === target.value) {
+      setIsValid(false);
+      console.log(isValid)
     }
   };
 
