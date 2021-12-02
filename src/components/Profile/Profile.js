@@ -1,20 +1,41 @@
 import React from 'react'
 import './Profile.css'
-import { useState, useContext, useEffect } from 'react'
+import { useState, useContext, useEffect, useRef } from 'react'
 import { CurrentUserContext } from '../../contexts/CurrentUserContext';
-import { useFormWithValidation } from '../../custom-hooks/FormValidationHook'
 
 function Profile(props) {
     const [displayedName, setDisplayedName] = useState()
     const [displaySaveButton, setDisplaySaveButton] = useState(false)
     const [errorMsg, setErrorMsg] = useState('')
     const [successMsg, setSuccessMsg] = useState('')
-    const profileForm = useFormWithValidation()
     const userContext = useContext(CurrentUserContext)
-    
+
+    const [defaultUserName, setDefaultUserName] = useState('')
+    const [defaultUserEmail, setDefaultUserEmail] = useState('')
+    const [nameInput, setNameInput] = useState('')
+    const [emailInput, setEmailInput] = useState('')
+    const [isValid, setIsValid] = useState(false)
+
+    const nameInputRef = useRef(null)
+    const emailInputRef = useRef(null)
+
     useEffect(() => {
+        setDefaultUserName(userContext.name)
+        setDefaultUserEmail(userContext.email)
+        setNameInput(userContext.name)
+        setEmailInput(userContext.email)
         setDisplayedName(userContext.name)
-    }, [userContext.name])
+    }, [userContext.email, userContext.nam, userContext.name])   
+
+    useEffect(() => {
+        if(nameInput !== defaultUserName || emailInput !== defaultUserEmail) {
+            setIsValid(true)
+        }
+
+        if(nameInput === defaultUserName && emailInput === defaultUserEmail) {
+            setIsValid(false)
+        }
+    }, [defaultUserEmail, defaultUserName, emailInput, nameInput])
 
     function handleDisplaySaveButton() {
         setDisplaySaveButton(true)
@@ -26,20 +47,14 @@ function Profile(props) {
 
     function handleUpdateProfile(evt) {
         evt.preventDefault()
-        if(!profileForm.values.nameInput) {
-            profileForm.values.nameInput = userContext.name
-        }
-        if(!profileForm.values.emailInput) {
-            profileForm.values.emailInput = userContext.email
-        }
-        props.apiUpdateUserData(profileForm.values.nameInput, profileForm.values.emailInput)
-        .then((res) => {
-            setSuccessMsg('Данные сохранены!')
-            handleHideSaveButton()
-        })
-        .catch((err) => {
-            setErrorMsg(err)
-        })
+        props.apiUpdateUserData(nameInput, emailInput)
+            .then((res) => {
+                setSuccessMsg('Данные сохранены!')
+                handleHideSaveButton()
+            })
+            .catch((err) => {
+                setErrorMsg(err)
+            })
     }
 
     return (
@@ -48,17 +63,17 @@ function Profile(props) {
             <form className="profile__form" onSubmit={evt => handleUpdateProfile(evt)}>
                 <div className="profile__input-container">
                     <p className="profile__subtitle">Имя</p>
-                    <input className="profile__input" defaultValue={userContext.name} name="nameInput" disabled={!displaySaveButton} onChange={profileForm.handleChange}/>
+                    <input ref={nameInputRef} className="profile__input" name="nameInput" value={nameInput} disabled={!displaySaveButton} onChange={evt => setNameInput(evt.target.value)} />
                 </div>
                 <div className="profile__alignment"></div>
                 <div className="profile__input-container">
                     <p className="profile__subtitle">E-mail</p>
-                    <input className="profile__input" defaultValue={userContext.email} type="email" name="emailInput" disabled={!displaySaveButton} onChange={profileForm.handleChange}/>
+                    <input ref={emailInputRef} className="profile__input" type="email" name="emailInput" value={emailInput  } disabled={!displaySaveButton} onChange={evt => setEmailInput(evt.target.value)} />
                 </div>
                 <p className="profile__success-msg">{successMsg}</p>
                 <div className={`profile__submit-container ${displaySaveButton ? "profile__submit-container_displayed" : ""}`}>
                     <p className="profile__error-msg">{errorMsg}</p>
-                    <button disabled={!profileForm.isValid} className={`profile__submit-button ${profileForm.isValid ? "" : "profile__submit-button_disabled"}`} type="submit">Сохранить</button>
+                    <button disabled={!isValid} className={`profile__submit-button ${isValid ? "" : "profile__submit-button_disabled"}`} type="submit">Сохранить</button>
                 </div>
             </form>
             <div className={`profile__button-container ${displaySaveButton ? "profile__button-container_hidden" : ""}`}>
