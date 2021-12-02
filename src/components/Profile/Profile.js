@@ -25,15 +25,35 @@ function Profile(props) {
         setNameInput(userContext.name)
         setEmailInput(userContext.email)
         setDisplayedName(userContext.name)
-    }, [userContext.email, userContext.nam, userContext.name])   
+    }, [userContext.email, userContext.nam, userContext.name])
 
     useEffect(() => {
-        if(nameInput !== defaultUserName || emailInput !== defaultUserEmail) {
+        let pattern = new RegExp(/^(("[\w-\s]+")|([\w-]+(?:\.[\w-]+)*)|("[\w-\s]+")([\w-]+(?:\.[\w-]+)*))(@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$)|(@\[?((25[0-5]\.|2[0-4][0-9]\.|1[0-9]{2}\.|[0-9]{1,2}\.))((25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\.){2}(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\]?$)/i);
+        if (!pattern.test(emailInput)) {
+            setIsValid(false);
+            setErrorMsg('Неправильный адрес электронной почты');
+        } else {
+            setIsValid(true)
+            setErrorMsg('');
+        }
+    }, [emailInput])
+
+    useEffect(() => {
+        setSuccessMsg('')
+        setErrorMsg('')
+
+        if (nameInput !== defaultUserName || emailInput !== defaultUserEmail) {
             setIsValid(true)
         }
 
-        if(nameInput === defaultUserName && emailInput === defaultUserEmail) {
+        if (nameInput === defaultUserName && emailInput === defaultUserEmail) {
             setIsValid(false)
+            setErrorMsg('Поменяйте значение одного из полей')
+        }
+
+        if(nameInput.length < 2) {
+            setIsValid(false)
+            setErrorMsg('Минимальное количество символов: 2')
         }
     }, [defaultUserEmail, defaultUserName, emailInput, nameInput])
 
@@ -68,7 +88,7 @@ function Profile(props) {
                 <div className="profile__alignment"></div>
                 <div className="profile__input-container">
                     <p className="profile__subtitle">E-mail</p>
-                    <input ref={emailInputRef} className="profile__input" type="email" name="emailInput" value={emailInput  } disabled={!displaySaveButton} onChange={evt => setEmailInput(evt.target.value)} />
+                    <input ref={emailInputRef} className="profile__input" type="email" name="emailInput" value={emailInput} disabled={!displaySaveButton} onChange={evt => setEmailInput(evt.target.value)} />
                 </div>
                 <p className="profile__success-msg">{successMsg}</p>
                 <div className={`profile__submit-container ${displaySaveButton ? "profile__submit-container_displayed" : ""}`}>
