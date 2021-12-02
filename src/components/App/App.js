@@ -53,7 +53,9 @@ function App() {
         setLoggedIn(true)
         setUserData()
         apiGetMovies()
-        handleTravel('/movies')
+        setTimeout(() => {
+          handleTravel('/movies')
+        }, 100);
         return res
       })
       .catch((err) => {
