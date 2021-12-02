@@ -11,7 +11,7 @@ function Profile(props) {
     const [successMsg, setSuccessMsg] = useState('')
     const profileForm = useFormWithValidation()
     const userContext = useContext(CurrentUserContext)
-
+    
     useEffect(() => {
         setDisplayedName(userContext.name)
     }, [userContext.name])

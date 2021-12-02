@@ -41,7 +41,9 @@ function App() {
       .then((res) => {
         setLoggedIn(true)
         setCurrentUser(res)
-        handleTravel('/movies')
+        setTimeout(() => {
+          handleTravel('/movies')
+        }, 100);
       })
   }
 
