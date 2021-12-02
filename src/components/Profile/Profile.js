@@ -28,17 +28,6 @@ function Profile(props) {
     }, [userContext.email, userContext.nam, userContext.name])
 
     useEffect(() => {
-        let pattern = new RegExp(/^(("[\w-\s]+")|([\w-]+(?:\.[\w-]+)*)|("[\w-\s]+")([\w-]+(?:\.[\w-]+)*))(@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$)|(@\[?((25[0-5]\.|2[0-4][0-9]\.|1[0-9]{2}\.|[0-9]{1,2}\.))((25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\.){2}(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\]?$)/i);
-        if (!pattern.test(emailInput)) {
-            setIsValid(false);
-            setErrorMsg('Неправильный адрес электронной почты');
-        } else {
-            setIsValid(true)
-            setErrorMsg('');
-        }
-    }, [emailInput])
-
-    useEffect(() => {
         setSuccessMsg('')
         setErrorMsg('')
 
@@ -51,10 +40,17 @@ function Profile(props) {
             setErrorMsg('Поменяйте значение одного из полей')
         }
 
-        if(nameInput.length < 2) {
+        if (nameInput.length < 2) {
             setIsValid(false)
             setErrorMsg('Минимальное количество символов: 2')
         }
+
+        let pattern = new RegExp(/^(("[\w-\s]+")|([\w-]+(?:\.[\w-]+)*)|("[\w-\s]+")([\w-]+(?:\.[\w-]+)*))(@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$)|(@\[?((25[0-5]\.|2[0-4][0-9]\.|1[0-9]{2}\.|[0-9]{1,2}\.))((25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\.){2}(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\]?$)/i);
+        if (!pattern.test(emailInput)) {
+            setIsValid(false);
+            setErrorMsg('Неправильный адрес электронной почты');
+        }
+
     }, [defaultUserEmail, defaultUserName, emailInput, nameInput])
 
     function handleDisplaySaveButton() {
