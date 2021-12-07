@@ -77,6 +77,17 @@
     min-height: 13px;
 }
 
+.profile__success-msg {
+    margin: 0;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 11px;
+    line-height: 13px;
+    color: #3DDC84;
+    text-align: center;
+    min-height: 13px;
+}
+
 .profile__submit-button {
     min-height: 45px;
     background-color: #4285F4;

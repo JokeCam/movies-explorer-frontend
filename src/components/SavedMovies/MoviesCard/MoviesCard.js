@@ -15,21 +15,23 @@ function MoviesCard(props) {
     }
 
     function handleDeleteMovie() {
-
+        props.apiDeleteMovie(props.movieData._id)
     }
 
     return (
         <div className="saved-movies-card">
             <img className={`saved-movies-card__check-mark ${displayDeleteButton ? "saved-movies-card__check-mark_displayed" : ""}`} src={closeIcon} alt="Галочка указывающая на добавленный фильм"
                 onClick={handleDeleteMovie}
+                onMouseOver={handleDisplayDeleteButton}
+                onMouseLeave={handleHideDeletebutton}
             />
-            <img className="saved-movies-card__image" src={props.link} alt="Фото превью фильма"
+            <img className="saved-movies-card__image" src={props.movieData.image} alt="Фото превью фильма"
                 onClick={handleDeleteMovie}
                 onMouseOver={handleDisplayDeleteButton}
                 onMouseLeave={handleHideDeletebutton}
             />
             <div className="saved-movies-card__text-container">
-                <h5 className="saved-movies-card__title">{props.name}</h5>
+                <h5 className="saved-movies-card__title">{props.movieData.nameRU}</h5>
                 <div className="saved-movies-card__subtitle-container">
                     <p className="saved-movies-card__subtitle">{props.length}</p>
                 </div>

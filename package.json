@@ -15,6 +15,7 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
+    "deploy": "npm run build && scp -r ./build/* mrstas@51.250.22.237:movies-explorer-frontend",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
